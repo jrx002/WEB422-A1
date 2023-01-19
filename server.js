@@ -32,28 +32,28 @@ app.get('/', (req,res)=>{
 app.get('/api/movies', (req,res)=>{
   if(req.query.page && req.query.perPage) {
     db.getAllMovies(req.query.page, req.query.perPage, req.query.title).then((data)=>{
-      if(data.length > 0) res.status(200).send(data);
-      else res.status(204).send('No Content!');
+      if(data.length > 0) res.status(200).json(data);
+      else res.status(204).json({message: 'No Content!'});
     })
   }
-  else res.status(404).send('Missing page or perPage parameter!');
+  else res.status(404).json({message: 'Missing page or perPage parameter!'});
 });
 
 //GET; get movie by id
 app.get('/api/movies/:_id',(req,res)=>{
   db.getMovieById(req.params._id).then((data)=>{
-    res.status(200).send(data);
+    res.status(200).json(data);
   }).catch((err)=>{
-    res.status(500).send(err + 'Movie cannot be found!');
+    res.status(500).json({error: err + ' :Movie cannot be found!'});
   })
 });
 
 //POST; add new movie using the request body data
 app.post('/api/movies', (req,res)=>{
   db.addNewMovie(req.body).then((data)=>{
-    res.status(201).send(`New movie with movie id: ${data._id} has been added!`);
+    res.status(201).json({message: `New movie with movie id: ${data._id} has been added!`});
   }).catch(()=>{
-    res.status(500).send(err + 'Movie cannot be created!');
+    res.status(500).json({error: err + ' :Movie cannot be created!'});
   })
 });
 
@@ -61,20 +61,20 @@ app.post('/api/movies', (req,res)=>{
 app.put('/api/movies/:_id',(req,res)=>{
   if(req.params._id.length > 0) {
     db.updateMovieById(req.body, req.params._id).then(()=>{
-      res.status(200).send(`Movie id: ${req.params._id} updating success!`);
+      res.status(200).json({message: `Movie id: ${req.params._id} updating success!`});
     }).catch((err)=>{
-      res.status(404).send(err + 'Movie cannot be found!');
+      res.status(404).json({error: err + ' :Movie cannot be found!'});
     })
   }
-  else res.status(500).send(err + 'Empty movie id!');
+  else res.status(500).json({error: 'Empty movie id!'});
 });
 
 //DELETE; delete movie by id
 app.delete('/api/movies/:_id',(req,res)=>{
   db.deleteMovieById(req.params._id).then(()=>{
-    res.send(200).send(`Movie id: ${req.params._id} deletion success!`);
+    res.status(200).json({message: `Movie id: ${req.params._id} deletion success!`});
   }).catch((err)=>{
-    res.send(404).send(err + 'Movie cannot be found!');
+    res.status(404).json({error:err + ' :Movie cannot be found!'});
   })
 })
 
