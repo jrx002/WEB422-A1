@@ -36,7 +36,7 @@ app.get('/api/movies', (req,res)=>{
       else res.status(204).send('No Content!');
     })
   }
-  else res.status(404).send(err + ' Missing page or perPage parameter!');
+  else res.status(404).send('Missing page or perPage parameter!');
 });
 
 //GET; get movie by id
